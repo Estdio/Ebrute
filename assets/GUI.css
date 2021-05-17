@@ -1,0 +1,20 @@
+.QMainWindow {
+    background-image : url(assets/E.png);
+    background-color: rgb(25, 25, 25);
+}
+
+.QLabel {
+    border-radius: 2px;
+    border: 1px solid white;
+    color: rgb(255, 255, 255);
+    padding: 5px;
+    background-color: rgb(255, 0, 0);
+}
+
+.QPushButton {
+    border-radius: 2px;
+    border: 1px solid white;
+    color: rgb(255, 255, 255);
+    padding: 5px;
+    background-color: rgb(255, 0, 0);
+}
