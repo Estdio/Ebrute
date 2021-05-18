@@ -1,3 +1,3 @@
-from Ebrute.brute import Brute
-from Ebrute.GUI import EbruteGUI
+from src.functions.brute import Brute
+from src.GUI.GUI import Ui_Ebrute
 import time
