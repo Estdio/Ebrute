@@ -127,6 +127,8 @@ class Brute:
                 driver.find_element_by_id(usernamelocate).send_keys(usrnm)
                 driver.find_element_by_id(passwordlocate).send_keys(pswd)
                 driver.find_element_by_id(formlocate).submit()
+                driver.find_element_by_id(usernamelocate).clear()
+                driver.find_element_by_id(passwordlocate).clear()
             except:
                 print("Successful log in")
                 time.sleep(100000)
